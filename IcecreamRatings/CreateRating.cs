@@ -20,9 +20,8 @@ namespace IcecreamRatings
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            
-
+            var data = JsonConvert.DeserializeObject<CreateRatingRequest>(requestBody);
+                        
             var id = Guid.NewGuid().ToString();
             // TODO: deserialize into domain model
 
