@@ -15,22 +15,23 @@ namespace IcecreamRatings
         [FunctionName("GetRating")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
+            [CosmosDB(
+                databaseName: "Ratings",
+                collectionName: "Ratings",
+                ConnectionStringSetting = "ConnectionString",
+                Id = "{Query.ratingid}",
+                PartitionKey = "{Query.userid}"
+            )]Models.RatingModel rating,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string ratingId = req.Query["ratingId"];
-
-            if (string.IsNullOrWhiteSpace(ratingId))
+            if (null == rating)
             {
                 return new NotFoundResult();
             }
-
-            // TODO: retrieve model from Cosmos
-
-            // return model response
-
-            return new OkObjectResult(new { ratingId });
+            
+            return new OkObjectResult(rating);
         }
     }
 }
