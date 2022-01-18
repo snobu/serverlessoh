@@ -7,11 +7,24 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace IcecreamRatings
 {
     public static class CreateRating
     {
+        static async Task<bool> Exists(string url)
+        {
+            using var client = new HttpClient();
+
+            var result = await client.GetAsync(url);
+            return result.IsSuccessStatusCode;
+        }
+
+        static string GetProductUrl(string id) => $"https://serverlessohapi.azurewebsites.net/api/GetProduct?productId={id}";
+        static string GetUserUrl(string id) => $"https://serverlessohapi.azurewebsites.net/api/GetUser?userId={id}";
+
+
         [FunctionName("CreateRating")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
@@ -23,10 +36,19 @@ namespace IcecreamRatings
             var data = JsonConvert.DeserializeObject<CreateRatingRequest>(requestBody);
                         
             var id = Guid.NewGuid().ToString();
-            // TODO: deserialize into domain model
 
-            // check the userid and product id are valid
+            if (await Exists(GetProductUrl(data.ProductId)) == false)
+            {
+                log.LogWarning($"Product {data.ProductId} not found");
+                return new NotFoundResult();
+            }
 
+            if (await Exists(GetUserUrl(data.UserId)) == false)
+            {
+                log.LogWarning($"User {data.UserId} not found");
+                return new NotFoundResult();
+            }
+            
             // persist in cosmos
 
             // return the model with an ID
