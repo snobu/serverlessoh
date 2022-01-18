@@ -2,7 +2,7 @@ using System;
 
 namespace IcecreamRatings.Models
 {
-    public class CreateRatingModel
+    public class RatingModel
     {
         public string Id  {get; set; }
         public string UserId { get; set; }
