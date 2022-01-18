@@ -1,4 +1,4 @@
-namespace IcecreamRatings
+namespace IcecreamRatings.Models
 {
     public class CreateRatingRequest
     {
