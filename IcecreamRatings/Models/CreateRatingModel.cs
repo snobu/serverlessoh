@@ -1,9 +1,10 @@
 using System;
 
-namespace IcecreamRatings
+namespace IcecreamRatings.Models
 {
-    public class CreateRatingResponse
+    public class CreateRatingModel
     {
+        public string Id  {get; set; }
         public string UserID { get; set; }
         public string ProductId { get; set; }
         public string LocationName { get; set; }
