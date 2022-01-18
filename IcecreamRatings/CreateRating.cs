@@ -27,34 +27,54 @@ namespace IcecreamRatings
 
 
         [FunctionName("CreateRating")]
-        public static async Task<IActionResult> Run(
+        public static IActionResult Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
+            [CosmosDB(
+                databaseName: "Ratings",
+                collectionName: "Ratings",
+                CreateIfNotExists = true,
+                PartitionKey = "/UserId",
+                ConnectionStringSetting = "ConnectionString")]out RatingModel document,          
             ILogger log)
         {
+
+            document = null;
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            string requestBody = new StreamReader(req.Body).ReadToEnd();
             var data = JsonConvert.DeserializeObject<CreateRatingRequest>(requestBody);
                         
             var id = Guid.NewGuid().ToString();
 
-            if (await Exists(GetProductUrl(data.ProductId)) == false)
+            if (Exists(GetProductUrl(data.ProductId)).Result == false)
             {
                 log.LogWarning($"Product {data.ProductId} not found");
-                return new NotFoundResult();
+                return new BadRequestResult();
             }
 
-            if (await Exists(GetUserUrl(data.UserId)) == false)
+            if (Exists(GetUserUrl(data.UserId)).Result == false)
             {
                 log.LogWarning($"User {data.UserId} not found");
-                return new NotFoundResult();
+                return new BadRequestResult();
             }
-            
-            // persist in cosmos
 
-            // return the model with an ID
+            if (data.Rating < 0 || data.Rating >5)
+            {
+                log.LogWarning($"User {data.Rating} is not between 0 and 5");
+                return new BadRequestResult();
+            }
 
-            return new OkObjectResult(data);
+            document = new RatingModel {
+                Id = id,
+                LocationName = data.LocationName,
+                ProductId = data.ProductId,
+                Rating = data.Rating,
+                Timestamp = DateTime.UtcNow,
+                UserId = data.UserId,
+                UserNotes = data.UserNotes
+            };
+
+            return new OkObjectResult(document);
         }
     }
 }
