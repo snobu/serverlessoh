@@ -5,14 +5,14 @@ on:
     paths-ignore:
     - 'README.md'
     branches:
-    - master
+    - main
   pull_request:
     branches:
-    - master
+    - main
 
 env:
   FUNCTIONAPP_PACKAGE_PATH: 'IcecreamRatings'
-  DOTNET_VERSION: '3.1.415'   
+  DOTNET_VERSION: '3.1.415'
 
 jobs:
   build-and-deploy:
