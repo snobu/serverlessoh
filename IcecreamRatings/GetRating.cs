@@ -19,18 +19,18 @@ namespace IcecreamRatings
                 databaseName: "Ratings",
                 collectionName: "Ratings",
                 ConnectionStringSetting = "ConnectionString",
-                Id = "{Query.ratingid}",
-                PartitionKey = "{Query.userid}"
+                Id = "{Query.ratingId}",
+                PartitionKey = "{Query.userId}"
             )]Models.RatingModel rating,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
+            log.LogInformation("Get rating");
+  
             if (null == rating)
             {
                 return new NotFoundResult();
             }
-            
+
             return new OkObjectResult(rating);
         }
     }

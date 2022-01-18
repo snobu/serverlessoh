@@ -4,6 +4,7 @@ namespace IcecreamRatings.Models
 {
     public class RatingModel
     {
+        [Newtonsoft.Json.JsonProperty("id")]
         public string Id  {get; set; }
         public string UserId { get; set; }
         public string ProductId { get; set; }
