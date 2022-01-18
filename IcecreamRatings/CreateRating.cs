@@ -7,6 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using IcecreamRatings.Models;
 
 namespace IcecreamRatings
 {
@@ -20,9 +21,8 @@ namespace IcecreamRatings
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            
-
+            var data = JsonConvert.DeserializeObject<CreateRatingRequest>(requestBody);
+                        
             var id = Guid.NewGuid().ToString();
             // TODO: deserialize into domain model
 
