@@ -8,3 +8,11 @@ Content-Type: application/json
     "rating": 5,
     "userNotes": "I love it"
 }
+
+###
+
+GET http://localhost:7071/api/getrating/6dd3bb49-a5be-41ca-9dac-3b995450f2db/ac73b154-7c69-4989-a6a2-7f9a275805c7 HTTP/1.1
+
+###
+
+GET http://localhost:7071/api/getratings/6dd3bb49-a5be-41ca-9dac-3b995450f2db HTTP/1.1

@@ -14,13 +14,13 @@ namespace IcecreamRatings
     {
         [FunctionName("GetRating")]
         public static IActionResult Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "getrating/{userId}/{ratingId}")] HttpRequest req,
             [CosmosDB(
                 databaseName: "Ratings",
                 collectionName: "Ratings",
                 ConnectionStringSetting = "ConnectionString",
-                Id = "{Query.ratingId}",
-                PartitionKey = "{Query.userId}"
+                Id = "{ratingId}",
+                PartitionKey = "{userId}"
             )]Models.RatingModel rating,
             ILogger log)
         {
