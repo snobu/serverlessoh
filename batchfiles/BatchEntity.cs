@@ -5,6 +5,7 @@ using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Linq;
+using System;
 
 namespace Company.Function
 {
@@ -12,14 +13,14 @@ namespace Company.Function
     public class BatchEntity 
     {
 
-        async Task<bool> CallApi(RequestModel model)
+        async Task<string> CallApi(RequestModel model)
         {
             const string url = "https://serverlessohmanagementapi.trafficmanager.net/api/order/combineOrderContent";
 
             using var client = new HttpClient();
             
             var result = await client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(model), System.Text.Encoding.UTF8, "appliction/json"));
-            return result.IsSuccessStatusCode;
+            return await result.Content.ReadAsStringAsync();
         }
 
 
@@ -31,11 +32,13 @@ namespace Company.Function
             Files.Add(filename);
             if (Files.Count == 3)
             {
-                CallApi(new RequestModel{
+                var output = CallApi(new RequestModel{
                     OrderHeaderDetailsCSVUrl = Files.FirstOrDefault(x => x.Contains("OrderHeaderDetails")),
                     OrderLineItemsCSVUrl = Files.FirstOrDefault(x => x.Contains("OrderLineItems")),
                     ProductInformationCSVUrl = Files.FirstOrDefault(x => x.Contains("ProductInformation"))
-                }).Wait();
+                }).Result;
+
+                Console.WriteLine(output);
             }
         }
 
