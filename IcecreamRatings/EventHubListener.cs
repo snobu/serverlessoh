@@ -18,29 +18,24 @@ namespace IcecreamRatings
 
 
     [FunctionName("EventHubListener")]
-    public static async Task Run(
+    public static void Run(
         [EventHubTrigger("salesevents", Connection = "EventHubConnectionAppSetting")] string myEventHubMessage, 
         [CosmosDB(
                 databaseName: "Ratings",
                 collectionName: "SalesEvents",
                 CreateIfNotExists = true,
                 PartitionKey = "/Id",
-                ConnectionStringSetting = "ConnectionString")] IAsyncCollector<CombinedJsonRequest> documents,
+                ConnectionStringSetting = "ConnectionString")] out CombinedJsonRequest document,
         ILogger log)
     {
 
       log.LogInformation("C# Event Hubs trigger function processed a request.");
       log.LogWarning(myEventHubMessage);
 
-      var data = JsonConvert.DeserializeObject<CombinedJsonRequest[]>(myEventHubMessage);
+      document = JsonConvert.DeserializeObject<CombinedJsonRequest>(myEventHubMessage);
+      document.Id = Guid.NewGuid().ToString();
 
-      foreach (var item in data)
-      {
-          item.Id = Guid.NewGuid().ToString();
-          await documents.AddAsync(item);
-      }
-
-      log.LogInformation($"Processed {data.Count()} events");
+      log.LogInformation($"Processed events");
 
     }
   }
