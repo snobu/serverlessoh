@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Http;
 using IcecreamRatings.Models;
+using System.Linq;
 
 namespace IcecreamRatings
 {
@@ -24,7 +25,7 @@ namespace IcecreamRatings
                 collectionName: "CombinedJson",
                 CreateIfNotExists = true,
                 PartitionKey = "/Id",
-                ConnectionStringSetting = "ConnectionString")]out CombinedJsonRequest document,          
+                ConnectionStringSetting = "ConnectionString")]out CombinedJsonModel document,          
             ILogger log)
         {
 
@@ -32,9 +33,10 @@ namespace IcecreamRatings
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             string requestBody = new StreamReader(req.Body).ReadToEnd();
-            var data = JsonConvert.DeserializeObject<CreateRatingRequest>(requestBody);
+            var data = JsonConvert.DeserializeObject<CombinedJsonRequest[]>(requestBody);
                         
             document.Id = Guid.NewGuid().ToString();
+            document.CombinedJsonRequest = data.ToList();
 
             return new OkObjectResult(document);
         }
