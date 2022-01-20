@@ -19,7 +19,9 @@ namespace Company.Function
 
             using var client = new HttpClient();
             
-            var result = await client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(model), System.Text.Encoding.UTF8, "appliction/json"));
+            var json = JsonConvert.SerializeObject(model);
+            Console.WriteLine(json);
+            var result = await client.PostAsync(url, new StringContent(json, System.Text.Encoding.UTF8, "appliction/json"));
             return await result.Content.ReadAsStringAsync();
         }
 

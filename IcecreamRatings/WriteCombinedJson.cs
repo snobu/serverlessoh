@@ -31,7 +31,6 @@ namespace IcecreamRatings
 
             document = null;
             log.LogInformation("C# HTTP trigger function processed a request.");
-
             string requestBody = new StreamReader(req.Body).ReadToEnd();
 
             log.LogWarning(requestBody);
