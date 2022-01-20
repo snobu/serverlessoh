@@ -20,6 +20,7 @@ namespace Company.Function
             using var client = new HttpClient();
             
             var result = await client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(model), System.Text.Encoding.UTF8, "appliction/json"));
+            result.EnsureSuccessStatusCode();
             return await result.Content.ReadAsStringAsync();
         }
 
