@@ -13,34 +13,36 @@ using System.Linq;
 
 namespace IcecreamRatings
 {
-    public static class WriteCombinedJson
-    {
+  public static class WriteCombinedJson
+  {
 
 
-        [FunctionName("WriteCombinedJson")]
-        public static IActionResult Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
-            [CosmosDB(
+    [FunctionName("WriteCombinedJson")]
+    public static IActionResult Run(
+        [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
+        [CosmosDB(
                 databaseName: "Ratings",
                 collectionName: "CombinedJson",
                 CreateIfNotExists = true,
                 PartitionKey = "/Id",
-                ConnectionStringSetting = "ConnectionString")]out CombinedJsonModel document,          
-            ILogger log)
-        {
+                ConnectionStringSetting = "ConnectionString")]out CombinedJsonModel document,
+        ILogger log)
+    {
 
-            document = null;
-            log.LogInformation("C# HTTP trigger function processed a request.");
-            string requestBody = new StreamReader(req.Body).ReadToEnd();
+      log.LogInformation("C# HTTP trigger function processed a request.");
+      string requestBody = new StreamReader(req.Body).ReadToEnd();
 
-            log.LogWarning(requestBody);
+      log.LogWarning(requestBody);
 
-            var data = JsonConvert.DeserializeObject<CombinedJsonRequest[]>(requestBody);
-                        
-            document.Id = Guid.NewGuid().ToString();
-            document.CombinedJsonRequest = data.ToList();
+      var data = JsonConvert.DeserializeObject<CombinedJsonRequest[]>(requestBody);
 
-            return new OkObjectResult(document);
-        }
+      document = new CombinedJsonModel
+      {
+        Id = Guid.NewGuid().ToString(),
+        CombinedJsonRequest = data.ToList()
+      };
+
+      return new OkObjectResult(document);
     }
+  }
 }
