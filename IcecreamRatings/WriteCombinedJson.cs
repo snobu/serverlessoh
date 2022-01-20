@@ -18,14 +18,14 @@ namespace IcecreamRatings
 
 
     [FunctionName("WriteCombinedJson")]
-    public static IActionResult Run(
+    public static async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
         [CosmosDB(
                 databaseName: "Ratings",
                 collectionName: "CombinedJson",
                 CreateIfNotExists = true,
                 PartitionKey = "/Id",
-                ConnectionStringSetting = "ConnectionString")]out CombinedJsonModel document,
+                ConnectionStringSetting = "ConnectionString")] IAsyncCollector<CombinedJsonRequest> documents,
         ILogger log)
     {
 
@@ -36,13 +36,13 @@ namespace IcecreamRatings
 
       var data = JsonConvert.DeserializeObject<CombinedJsonRequest[]>(requestBody);
 
-      document = new CombinedJsonModel
+      foreach (var item in data)
       {
-        Id = Guid.NewGuid().ToString(),
-        CombinedJsonRequest = data.ToList()
-      };
+          item.Id = Guid.NewGuid().ToString();
+          await documents.AddAsync(item);
+      }
 
-      return new OkObjectResult(document);
+      return new OkObjectResult(data);
     }
   }
 }

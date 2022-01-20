@@ -29,6 +29,8 @@ namespace IcecreamRatings.Models
 
   public class CombinedJsonRequest
   {
+    [Newtonsoft.Json.JsonProperty("id")]
+    public string Id { get; set; }
     public Headers Headers { get; set; }
     public List<Detail> Details { get; set; }
   }
