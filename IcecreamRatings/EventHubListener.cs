@@ -19,10 +19,10 @@ namespace IcecreamRatings
 
     [FunctionName("EventHubListener")]
     public static async Task Run(
-        [EventHubTrigger("team9evenhubworkspace", Connection = "EventHubConnectionAppSetting")] string myEventHubMessage, 
+        [EventHubTrigger("team9evenhubworkspace/salesevents", Connection = "EventHubConnectionAppSetting")] string myEventHubMessage, 
         [CosmosDB(
                 databaseName: "Ratings",
-                collectionName: "CombinedJson",
+                collectionName: "SalesEvents",
                 CreateIfNotExists = true,
                 PartitionKey = "/Id",
                 ConnectionStringSetting = "ConnectionString")] IAsyncCollector<CombinedJsonRequest> documents,
