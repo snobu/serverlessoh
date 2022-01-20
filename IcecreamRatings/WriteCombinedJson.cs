@@ -33,6 +33,9 @@ namespace IcecreamRatings
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             string requestBody = new StreamReader(req.Body).ReadToEnd();
+
+            log.LogWarning(requestBody);
+
             var data = JsonConvert.DeserializeObject<CombinedJsonRequest[]>(requestBody);
                         
             document.Id = Guid.NewGuid().ToString();
