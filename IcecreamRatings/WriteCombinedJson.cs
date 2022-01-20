@@ -23,8 +23,8 @@ namespace IcecreamRatings
                 databaseName: "Ratings",
                 collectionName: "CombinedJson",
                 CreateIfNotExists = true,
-                PartitionKey = "/UserId",
-                ConnectionStringSetting = "ConnectionString")]out CombinedJson document,          
+                PartitionKey = "/Id",
+                ConnectionStringSetting = "ConnectionString")]out CombinedJsonRequest document,          
             ILogger log)
         {
 
@@ -34,12 +34,7 @@ namespace IcecreamRatings
             string requestBody = new StreamReader(req.Body).ReadToEnd();
             var data = JsonConvert.DeserializeObject<CreateRatingRequest>(requestBody);
                         
-            var id = Guid.NewGuid().ToString();
-
-            document = new CombinedJson {
-                Id = id,
-    
-            };
+            document.Id = Guid.NewGuid().ToString();
 
             return new OkObjectResult(document);
         }
