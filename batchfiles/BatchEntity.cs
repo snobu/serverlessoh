@@ -25,7 +25,7 @@ namespace Company.Function
 
         async Task<bool> CallFuction(string requestData)
         {
-            const string url = "https://team9prodfunc.azurewebsites.net/api/WriteCombinedJson?code=ftOEouoPau1Y1uJ4IaFHlhofz5nlKECNOTH46lt75iakHT5g5byOew%3D%3D";
+            const string url = "https://team9prodfunc.azurewebsites.net/api/WriteCombinedJson?code=fYzjnWoXmmzjExScxaCvPkKu34LSHLEzF6TomVjNpoz3pf/RpE25Tg==&clientId=default";
             using var client = new HttpClient();
             
             var result = await client.PostAsync(url, new StringContent(requestData, System.Text.Encoding.UTF8, "appliction/json"));
