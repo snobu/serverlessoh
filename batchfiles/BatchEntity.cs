@@ -23,7 +23,14 @@ namespace Company.Function
             return await result.Content.ReadAsStringAsync();
         }
 
-
+        async Task<bool> CallFuction(string requestData)
+        {
+            const string url = "https://team9prodfunc.azurewebsites.net/api/WriteCombinedJson?code=ftOEouoPau1Y1uJ4IaFHlhofz5nlKECNOTH46lt75iakHT5g5byOew%3D%3D";
+            using var client = new HttpClient();
+            
+            var result = await client.PostAsync(url, new StringContent(requestData, System.Text.Encoding.UTF8, "appliction/json"));
+            return result.IsSuccessStatusCode;
+        }
 
         [JsonProperty("files")]
         public List<string> Files { get; set; } = new List<string>();
@@ -32,13 +39,15 @@ namespace Company.Function
             Files.Add(filename);
             if (Files.Count == 3)
             {
-                var output = CallApi(new RequestModel{
+                var jsonDocument = CallApi(new RequestModel{
                     OrderHeaderDetailsCSVUrl = Files.FirstOrDefault(x => x.Contains("OrderHeaderDetails")),
                     OrderLineItemsCSVUrl = Files.FirstOrDefault(x => x.Contains("OrderLineItems")),
                     ProductInformationCSVUrl = Files.FirstOrDefault(x => x.Contains("ProductInformation"))
                 }).Result;
 
-                Console.WriteLine(output);
+                Console.WriteLine(jsonDocument);
+
+                CallFuction(jsonDocument).Wait();
             }
         }
 
