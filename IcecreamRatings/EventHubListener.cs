@@ -40,6 +40,8 @@ namespace IcecreamRatings
           await documents.AddAsync(item);
       }
 
+      log.LogInformation($"Processed {data.Count()} events");
+
     }
   }
 }
