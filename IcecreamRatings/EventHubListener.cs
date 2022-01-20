@@ -19,7 +19,7 @@ namespace IcecreamRatings
 
     [FunctionName("EventHubListener")]
     public static async Task Run(
-        [EventHubTrigger("samples-workitems", Connection = "EventHubConnectionAppSetting")] string myEventHubMessage, 
+        [EventHubTrigger("team9evenhubworkspace", Connection = "EventHubConnectionAppSetting")] string myEventHubMessage, 
         [CosmosDB(
                 databaseName: "Ratings",
                 collectionName: "CombinedJson",
